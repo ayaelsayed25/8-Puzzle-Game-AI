@@ -119,15 +119,15 @@ def DFS(initialState):
     return [False, timeOfExecution, explored]
 
 
-def AStar(initial_state, heuristics_type):
-    if heuristics_type == "euclidean":
-        return AStarSearch(initial_state, euclideanHeuristics)
-    elif heuristics_type == "manhattan":
-        return AStarSearch(initial_state, manhattanHeuristics)
+def AStarManhattan(initial_state):
+    return AStar(initial_state, manhattanHeuristics)
+
+def AStarEuclidean(initial_state):
+    return AStar(initial_state, euclideanHeuristics)
 
 
 # A* Search:
-def AStarSearch(initialState, heuristicsFunction):
+def AStar(initialState, heuristicsFunction):
     frontier = PriorityQueue()
     initHeuristics = heuristicsFunction(initialState)  # heuristics in initial state
     frontier.put((initHeuristics, initialState))  # initialize priority queue
@@ -167,7 +167,7 @@ def AStarSearch(initialState, heuristicsFunction):
         else:
             frontier.get()
     timeOfExecution = (time.time() - start_time) * 1000
-    return [False, explored, timeOfExecution]
+    return [False, timeOfExecution, explored]
 
 
 # Manhattan distance heuristics

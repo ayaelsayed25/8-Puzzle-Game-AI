@@ -33,18 +33,16 @@ class GUI:
         # Text Field to Enter Initial State
         self.Label = Label(self.root, text="Initial State", bg="white", font=("Constantia", 14))
         self.Label.grid(row=4, column=0, pady=5)
-        self.entry = Entry(self.root, textvariable=self.default)
+        self.entry = Entry(self.root)
         self.entry.grid(row=4, column=1, pady=5)
         # Algorithms Buttons
-        self.button = Button(self.root, text="BFS", border="0", bg="#CEE5D0", command=self.update_states(self, BFS))
+        self.button = Button(self.root, text="BFS", border="0", bg="#CEE5D0", command=lambda: self.update_states(BFS))
         self.button.grid(row=5, column=0, pady=(0, 5))
-        self.button = Button(self.root, text="DFS", border="0", bg="#CEE5D0", command=self.update_states(self, DFS))
+        self.button = Button(self.root, text="DFS", border="0", bg="#CEE5D0", command=lambda: self.update_states(DFS))
         self.button.grid(row=5, column=2, pady=(0, 5))
-        # TODO function Name
-        self.button = Button(self.root, text="A* Euclidean", border="0", bg="#CEE5D0", command=self.update_states(self, A))
+        self.button = Button(self.root, text="A* Euclidean", border="0", bg="#CEE5D0", command=lambda: self.update_states(AStarEuclidean))
         self.button.grid(row=6, column=0)
-        # TODO function Name
-        self.button = Button(self.root, text="A* Manhattan", border="0", bg="#CEE5D0", command=self.update_states(self, ))
+        self.button = Button(self.root, text="A* Manhattan", border="0", bg="#CEE5D0", command=lambda: self.update_states(AStarManhattan))
         self.button.grid(row=6, column=2)
         self.button = Button(self.root, text="Stop", border="0", bg="#CEE5D0", command=self.stop_expansion)
         self.button.grid(row=7, column=1, pady=(0, 5))
@@ -55,21 +53,28 @@ class GUI:
     def stop_expansion(self):
         self.stop = True
 
-    def update_states(self, callback):
+    def update_states(self, search_algorithm):
         self.stop = False
-        response = callback(self.default)
+        self.root.update()
+        path = []
+        for i in range(9):
+            if self.default[i] == '0':
+                initial_state = State(self.entry.get(), i)
+                break
+        response = search_algorithm(initial_state)
         if response[0]:
-            expansion = response[1]
-            self.time["text"] = "Total Running time = " + response[2]
-            path = response[3]
-            self.cost["text"] = "Total Cost = " + response[4]
-            self.depth["text"] = "Search Depth = " + response[5] + " Levels"
+            self.time["text"] = "Total Running time = " + str(response[1])
+            path = response[2]
+            self.cost["text"] = "Total Cost = " + str(response[3])
+            expansion = response[4]
+            # self.depth["text"] = "Search Depth = " + response[5] + " Levels"
         else:
-            expansion = response[1]
-            self.time["text"] = "Total Running time = " + response[2]
-            self.depth["text"] = "Search Depth = " + response[3] + " Levels"
+            self.time["text"] = "Total Running time = " + str(response[1])
+            expansion = response[2]
+            # self.depth["text"] = "Search Depth = " + response[3] + " Levels"
 
-        for j in range(len(path)) and self.stop and response[0]:
+        for j in range(len(path)):
+            if self.stop or response[0]: break
             self.nodes = "Path to Goal"
             time.sleep(1)
             for i in range(9):
@@ -77,11 +82,11 @@ class GUI:
                     num = path[j][i]
                 else:
                     num = ""
-                print(self.Labels[i]["text"])
                 self.Labels[i]["text"] = num
                 self.Labels[i]["bg"] = self.colors[path[j][i]]
             self.root.update()
-        for j in range(len(expansion)) and self.stop:
+        for j in range(len(expansion)):
+            if self.stop: break
             self.nodes = "Nodes Expansion"
             time.sleep(1)
             for i in range(9):
@@ -89,7 +94,6 @@ class GUI:
                     num = expansion[j][i]
                 else:
                     num = ""
-                print(self.Labels[i]["text"])
                 self.Labels[i]["text"] = num
                 self.Labels[i]["bg"] = self.colors[expansion[j][i]]
             self.root.update()
