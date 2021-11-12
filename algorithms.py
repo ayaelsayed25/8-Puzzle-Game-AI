@@ -30,6 +30,7 @@ class State:
     def isGoalState(self, goal):
         return self.value == goal.value
 
+
 goal_state = State("012345678", 0)
 movements = ['up', 'down', 'right', 'left']
 
@@ -82,7 +83,7 @@ def BFS(initial_state):
         explored.append(state.value)
 
         if state.isGoalState(goal_state):
-            return construct_path(state, initial_state, start_time, parent_set) + explored
+            return construct_path(state, initial_state, start_time, parent_set) + [explored]
         for move in movements:
             newState = constructNextState(state, move)
             if newState is not None and parent_set.get(newState.value) is None:
@@ -104,7 +105,7 @@ def DFS(initialState):
         explored.append(state.value)
 
         if state.isGoalState(goal_state):
-            return construct_path(state, initialState, start_time, parentSet) + explored
+            return construct_path(state, initialState, start_time, parentSet) + [explored]
 
         # adding state childern up down right left
         for move in movements:
@@ -144,7 +145,7 @@ def AStarSearch(initialState, heuristicsFunction):
             explored.append(state.value)
 
             if state.isGoalState(goal_state):  # check if the state is a goal state
-                return construct_path(state, initialState, start_time, parentSet) + explored
+                return construct_path(state, initialState, start_time, parentSet) + [explored]
 
             for i in ['up', 'down', 'right', 'left']:
                 newState = constructNextState(state, i)
