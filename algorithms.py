@@ -27,6 +27,8 @@ class State:
     def isGoalState(self, goal):
         return self.value == goal.value
 
+    def isGoalState(self, goal):
+        return self.value == goal.value
 
 goal_state = State("012345678", 0)
 movements = ['up', 'down', 'right', 'left']
@@ -163,7 +165,6 @@ def AStarSearch(initialState, heuristicsFunction):
                         costSet[newState.value] = totalCost  # decrease key
         else:
             frontier.get()
-
     timeOfExecution = (time.time() - start_time) * 1000
     return [False, explored, timeOfExecution]
 

@@ -1,5 +1,6 @@
-import time
 from tkinter import *
+import time
+from algorithms import *
 
 
 class GUI:
@@ -10,6 +11,8 @@ class GUI:
         self.colors = {'0': "#ffffff", '1': "#CCBFE9", '2': "#B8E9E4", '3': "#FEF3D8", '4': "#FFD3CC", '5': "#FFF8C2",
                        '6': "#CFF3CA", '7': "#A9D4C5", '8': "#F8EAD7"}
         self.Labels = []
+        self.nodes = Label(self.root, text="", bg="white", font=("Constantia", 14))
+        self.nodes.grid(row=3, column=0)
         self.default = "012345678"
         # Grid Initialization
         for i in range(9):
@@ -23,42 +26,73 @@ class GUI:
         # Labels to view : cost of path, nodes expanded, and search depth–running time
         self.cost = Label(self.root, text="", bg="white", font=("Constantia", 14))
         self.cost.grid(row=0, column=4, padx=5)
-        self.expansion = Label(self.root, text="", bg="white", font=("Constantia", 14))
-        self.expansion.grid(row=1, column=4, padx=5)
+        self.depth = Label(self.root, text="", bg="white", font=("Constantia", 14))
+        self.depth.grid(row=1, column=4, padx=5)
         self.time = Label(self.root, text="", bg="white", font=("Constantia", 14))
-        self.time.grid(row=3, column=0, padx=5)
+        self.time.grid(row=2, column=4, padx=5)
         # Text Field to Enter Initial State
         self.Label = Label(self.root, text="Initial State", bg="white", font=("Constantia", 14))
-        self.Label.grid(row=3, column=0, pady=5)
+        self.Label.grid(row=4, column=0, pady=5)
         self.entry = Entry(self.root, textvariable=self.default)
-        self.entry.grid(row=3, column=1, pady=5)
+        self.entry.grid(row=4, column=1, pady=5)
         # Algorithms Buttons
-        self.button = Button(self.root, text="BFS", border="0", bg="#CEE5D0", command=self.update_states)
+        self.button = Button(self.root, text="BFS", border="0", bg="#CEE5D0", command=self.update_states(self, BFS))
         self.button.grid(row=5, column=0, pady=(0, 5))
-        self.button = Button(self.root, text="DFS", border="0", bg="#CEE5D0", command=self.update_states)
+        self.button = Button(self.root, text="DFS", border="0", bg="#CEE5D0", command=self.update_states(self, DFS))
         self.button.grid(row=5, column=2, pady=(0, 5))
-        self.button = Button(self.root, text="A* Euclidean", border="0", bg="#CEE5D0", command=self.update_states)
-        self.button.grid(row=6, column=0, pady=(0, 5))
-        self.button = Button(self.root, text="A* Manhattan", border="0", bg="#CEE5D0", command=self.update_states)
-        self.button.grid(row=6, column=2, pady=(0, 5))
+        # TODO function Name
+        self.button = Button(self.root, text="A* Euclidean", border="0", bg="#CEE5D0", command=self.update_states(self, A))
+        self.button.grid(row=6, column=0)
+        # TODO function Name
+        self.button = Button(self.root, text="A* Manhattan", border="0", bg="#CEE5D0", command=self.update_states(self, ))
+        self.button.grid(row=6, column=2)
+        self.button = Button(self.root, text="Stop", border="0", bg="#CEE5D0", command=self.stop_expansion)
+        self.button.grid(row=7, column=1, pady=(0, 5))
+        self.stop = False
 
         self.root.mainloop()
 
-    def update_states(self):
-        path = ["056781234", "012345678"]
+    def stop_expansion(self):
+        self.stop = True
 
-        for j in range(len(path)):
+    def update_states(self, callback):
+        self.stop = False
+        response = callback(self.default)
+        if response[0]:
+            expansion = response[1]
+            self.time["text"] = "Total Running time = " + response[2]
+            path = response[3]
+            self.cost["text"] = "Total Cost = " + response[4]
+            self.depth["text"] = "Search Depth = " + response[5] + " Levels"
+        else:
+            expansion = response[1]
+            self.time["text"] = "Total Running time = " + response[2]
+            self.depth["text"] = "Search Depth = " + response[3] + " Levels"
+
+        for j in range(len(path)) and self.stop and response[0]:
+            self.nodes = "Path to Goal"
+            time.sleep(1)
             for i in range(9):
                 if path[j][i] != '0':
                     num = path[j][i]
                 else:
                     num = ""
-                # Labels[i].pack()
                 print(self.Labels[i]["text"])
                 self.Labels[i]["text"] = num
                 self.Labels[i]["bg"] = self.colors[path[j][i]]
             self.root.update()
-            time.sleep(5)
+        for j in range(len(expansion)) and self.stop:
+            self.nodes = "Nodes Expansion"
+            time.sleep(1)
+            for i in range(9):
+                if expansion[j][i] != '0':
+                    num = expansion[j][i]
+                else:
+                    num = ""
+                print(self.Labels[i]["text"])
+                self.Labels[i]["text"] = num
+                self.Labels[i]["bg"] = self.colors[expansion[j][i]]
+            self.root.update()
 
 
 app = GUI()
