@@ -69,7 +69,7 @@ def construct_path(state, initial_state, start_time, parent_set):
         state = parent_set[state.value]
     path.append(state.value)
     path.reverse()
-    return [True, timeOfExecution, path, costOfPath, maxDepth]
+    return [True, timeOfExecution, path, costOfPath]
 
 
 def BFS(initial_state):
@@ -90,7 +90,6 @@ def BFS(initial_state):
         for move in movements:
             newState = constructNextState(state, move)
             if newState is not None and parent_set.get(newState.value) is None:
-                print(newState.value)
                 # search if not in frontier or explored = not in parent set
                 parent_set[newState.value] = state
                 frontier_queue.append(newState)
@@ -125,11 +124,11 @@ def DFS(initialState):
     return [False, timeOfExecution, explored, maxDepth + 1]
 
 
-def AStar(initial_state, heuristics_type):
-    if heuristics_type == "euclidean":
-        return AStarSearch(initial_state, euclideanHeuristics)
-    elif heuristics_type == "manhattan":
-        return AStarSearch(initial_state, manhattanHeuristics)
+def AStarEuclidean(initial_state):
+    return AStarSearch(initial_state, euclideanHeuristics)
+
+def AStarManhattan(initial_state):
+    return AStarSearch(initial_state, manhattanHeuristics)
 
 
 # A* Search:
@@ -175,7 +174,7 @@ def AStarSearch(initialState, heuristicsFunction):
         else:
             frontier.get()
     timeOfExecution = (time.time() - start_time) * 1000
-    return [False, explored, timeOfExecution, maxDepth + 1]
+    return [False, timeOfExecution, explored, maxDepth + 1]
 
 
 # Manhattan distance heuristics

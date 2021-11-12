@@ -58,7 +58,7 @@ class GUI:
         self.root.update()
         path = []
         for i in range(9):
-            if self.default[i] == '0':
+            if self.entry.get()[i] == '0':
                 initial_state = State(self.entry.get(), i)
                 break
         response = search_algorithm(initial_state)
@@ -67,16 +67,16 @@ class GUI:
             path = response[2]
             self.cost["text"] = "Total Cost = " + str(response[3])
             expansion = response[4]
-            # self.depth["text"] = "Search Depth = " + response[5] + " Levels"
+            self.depth["text"] = "Search Depth = " + str(response[5]) + " Levels"
         else:
             self.time["text"] = "Total Running time = " + str(response[1])
             expansion = response[2]
-            # self.depth["text"] = "Search Depth = " + response[3] + " Levels"
+            self.depth["text"] = "Search Depth = " + str(response[3]) + " Levels"
 
         for j in range(len(path)):
-            if self.stop or response[0]: break
-            self.nodes = "Path to Goal"
-            time.sleep(1)
+            if self.stop or not response[0]: break
+            self.nodes["text"] = "Path to Goal"
+            time.sleep(3)
             for i in range(9):
                 if path[j][i] != '0':
                     num = path[j][i]
@@ -87,8 +87,8 @@ class GUI:
             self.root.update()
         for j in range(len(expansion)):
             if self.stop: break
-            self.nodes = "Nodes Expansion"
-            time.sleep(1)
+            self.nodes["text"] = "Nodes Expansion"
+            time.sleep(3)
             for i in range(9):
                 if expansion[j][i] != '0':
                     num = expansion[j][i]
