@@ -60,7 +60,7 @@ def constructNextState(currentState, action):
 
 
 def construct_path(state, initial_state, start_time, parent_set):
-    timeOfExecution = (time.time() - start_time) * 1000
+    timeOfExecution = (time.time() - start_time)
     path = []
     costOfPath = state.cost
     # starting from goal until the root of the path
@@ -93,7 +93,7 @@ def BFS(initial_state):
                 # search if not in frontier or explored = not in parent set
                 parent_set[newState.value] = state
                 frontier_queue.append(newState)
-    timeOfExecution = (time.time() - start_time) * 1000
+    timeOfExecution = (time.time() - start_time)
     return [False, timeOfExecution, explored, maxDepth + 1]
 
 
@@ -120,7 +120,7 @@ def DFS(initialState):
                 newState.cost = state.cost + 1
                 parentSet[newState.value] = state
                 frontierStack.append(newState)
-    timeOfExecution = (time.time() - start_time) * 1000
+    timeOfExecution = (time.time() - start_time)
     return [False, timeOfExecution, explored, maxDepth + 1]
 
 
@@ -173,7 +173,7 @@ def AStarSearch(initialState, heuristicsFunction):
                         costSet[newState.value] = totalCost  # decrease key
         else:
             frontier.get()
-    timeOfExecution = (time.time() - start_time) * 1000
+    timeOfExecution = (time.time() - start_time)
     return [False, timeOfExecution, explored, maxDepth + 1]
 
 
