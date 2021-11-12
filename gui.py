@@ -1,5 +1,5 @@
 from tkinter import *
-import time
+
 from algorithms import *
 
 
@@ -76,7 +76,7 @@ class GUI:
         for j in range(len(path)):
             if self.stop or not response[0]: break
             self.nodes["text"] = "Path to Goal"
-            time.sleep(3)
+            time.sleep(0.6)
             for i in range(9):
                 if path[j][i] != '0':
                     num = path[j][i]
@@ -85,18 +85,18 @@ class GUI:
                 self.Labels[i]["text"] = num
                 self.Labels[i]["bg"] = self.colors[path[j][i]]
             self.root.update()
-        for j in range(len(expansion)):
-            if self.stop: break
-            self.nodes["text"] = "Nodes Expansion"
-            time.sleep(3)
-            for i in range(9):
-                if expansion[j][i] != '0':
-                    num = expansion[j][i]
-                else:
-                    num = ""
-                self.Labels[i]["text"] = num
-                self.Labels[i]["bg"] = self.colors[expansion[j][i]]
-            self.root.update()
+        # for j in range(len(expansion)):
+        #     if self.stop: break
+        #     self.nodes["text"] = "Nodes Expansion"
+        #     time.sleep(3)
+        #     for i in range(9):
+        #         if expansion[j][i] != '0':
+        #             num = expansion[j][i]
+        #         else:
+        #             num = ""
+        #         self.Labels[i]["text"] = num
+        #         self.Labels[i]["bg"] = self.colors[expansion[j][i]]
+        #     self.root.update()
 
 
 app = GUI()

@@ -69,6 +69,8 @@ def construct_path(state, initial_state, start_time, parent_set):
         state = parent_set[state.value]
     path.append(state.value)
     path.reverse()
+    print(path)
+    print(len(path))
     return [True, timeOfExecution, path, costOfPath]
 
 
@@ -91,6 +93,7 @@ def BFS(initial_state):
             newState = constructNextState(state, move)
             if newState is not None and parent_set.get(newState.value) is None:
                 # search if not in frontier or explored = not in parent set
+                newState.cost = state.cost + 1
                 parent_set[newState.value] = state
                 frontier_queue.append(newState)
     timeOfExecution = (time.time() - start_time) * 1000
@@ -203,3 +206,9 @@ def euclideanHeuristics(currentState):
         distance = math.sqrt(abs(icurrent - i) ** 2 + abs(jcurrent - j) ** 2)
         sum = sum + distance
     return sum
+
+if __name__ == '__main__':
+    # state = State("234651708",7)
+    state = State("126453870",8)
+
+    BFS(state)
