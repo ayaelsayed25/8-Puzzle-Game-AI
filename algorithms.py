@@ -69,21 +69,24 @@ def construct_path(state, initial_state, start_time, parent_set):
         state = parent_set[state.value]
     path.append(state.value)
     path.reverse()
-    return [True, timeOfExecution, path, costOfPath]
+    return [True, timeOfExecution, path, costOfPath, maxDepth]
 
 
 def BFS(initial_state):
     frontier_queue = [initial_state]
     parent_set = {initial_state.value: initial_state}
     explored = []
+    maxDepth = 0
     start_time = time.time()
 
     while len(frontier_queue) != 0:
         state = frontier_queue.pop(0)
+        if state.cost > maxDepth:
+          maxDepth = state.cost
         explored.append(state.value)
 
         if state.isGoalState(goal_state):
-            return construct_path(state, initial_state, start_time, parent_set) + [explored]
+            return construct_path(state, initial_state, start_time, parent_set) + [explored, maxDepth + 1]
         for move in movements:
             newState = constructNextState(state, move)
             if newState is not None and parent_set.get(newState.value) is None:
@@ -92,20 +95,23 @@ def BFS(initial_state):
                 parent_set[newState.value] = state
                 frontier_queue.append(newState)
     timeOfExecution = (time.time() - start_time) * 1000
-    return [False, timeOfExecution, explored]
+    return [False, timeOfExecution, explored, maxDepth + 1]
 
 
 def DFS(initialState):
     frontierStack = [initialState]
     parentSet = {initialState.value: initialState}
     explored = []
+    maxDepth = 0
     start_time = time.time()
     while len(frontierStack) != 0:
         state = frontierStack.pop()
+        if state.cost > maxDepth:
+          maxDepth = state.cost
         explored.append(state.value)
 
         if state.isGoalState(goal_state):
-            return construct_path(state, initialState, start_time, parentSet) + [explored]
+            return construct_path(state, initialState, start_time, parentSet) + [explored, maxDepth + 1]
 
         # adding state childern up down right left
         for move in movements:
@@ -116,18 +122,18 @@ def DFS(initialState):
                 parentSet[newState.value] = state
                 frontierStack.append(newState)
     timeOfExecution = (time.time() - start_time) * 1000
-    return [False, timeOfExecution, explored]
+    return [False, timeOfExecution, explored, maxDepth + 1]
 
 
-def AStarManhattan(initial_state):
-    return AStar(initial_state, manhattanHeuristics)
-
-def AStarEuclidean(initial_state):
-    return AStar(initial_state, euclideanHeuristics)
+def AStar(initial_state, heuristics_type):
+    if heuristics_type == "euclidean":
+        return AStarSearch(initial_state, euclideanHeuristics)
+    elif heuristics_type == "manhattan":
+        return AStarSearch(initial_state, manhattanHeuristics)
 
 
 # A* Search:
-def AStar(initialState, heuristicsFunction):
+def AStarSearch(initialState, heuristicsFunction):
     frontier = PriorityQueue()
     initHeuristics = heuristicsFunction(initialState)  # heuristics in initial state
     frontier.put((initHeuristics, initialState))  # initialize priority queue
@@ -135,6 +141,7 @@ def AStar(initialState, heuristicsFunction):
     costSet = {
         initialState.value: initHeuristics}  # hashmap for mapping the cost to the state value, helps search with cost = theta(1)
     explored = []  # list for visited states
+    maxDepth = 0
     start_time = time.time()
 
     while not frontier.empty():
@@ -143,9 +150,10 @@ def AStar(initialState, heuristicsFunction):
             1].value]:  # if the cost of the min state equals the cost for the updated state, visit that state
             state = frontier.get()[1]
             explored.append(state.value)
-
+            if(state.cost > maxDepth):
+              maxDepth = state.cost
             if state.isGoalState(goal_state):  # check if the state is a goal state
-                return construct_path(state, initialState, start_time, parentSet) + [explored]
+                return construct_path(state, initialState, start_time, parentSet) + [explored, maxDepth+1]
 
             for i in ['up', 'down', 'right', 'left']:
                 newState = constructNextState(state, i)
@@ -167,7 +175,7 @@ def AStar(initialState, heuristicsFunction):
         else:
             frontier.get()
     timeOfExecution = (time.time() - start_time) * 1000
-    return [False, timeOfExecution, explored]
+    return [False, explored, timeOfExecution, maxDepth + 1]
 
 
 # Manhattan distance heuristics
