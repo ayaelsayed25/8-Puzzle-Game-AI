@@ -63,20 +63,23 @@ class GUI:
                 break
         response = search_algorithm(initial_state)
         if response[0]:
-            self.time["text"] = "Total Running time = " + str(response[1])
+            self.time["text"] = "Total Running time = " + str(int(response[1]))
             path = response[2]
             self.cost["text"] = "Total Cost = " + str(response[3])
             expansion = response[4]
             self.depth["text"] = "Search Depth = " + str(response[5]) + " Levels"
         else:
-            self.time["text"] = "Total Running time = " + str(response[1])
+            self.time["text"] = "Total Running time = " + str(int(response[1]))
             expansion = response[2]
+            self.cost["text"] = ""
+            self.nodes["text"] = "Can't Be Solved"
             self.depth["text"] = "Search Depth = " + str(response[3]) + " Levels"
-
+        print(path)
         for j in range(len(path)):
             if self.stop or not response[0]: break
             self.nodes["text"] = "Path to Goal"
-            time.sleep(0.6)
+            time.sleep(1)
+            print(path[j])
             for i in range(9):
                 if path[j][i] != '0':
                     num = path[j][i]
@@ -88,7 +91,7 @@ class GUI:
         # for j in range(len(expansion)):
         #     if self.stop: break
         #     self.nodes["text"] = "Nodes Expansion"
-        #     time.sleep(3)
+        #     time.sleep(1)
         #     for i in range(9):
         #         if expansion[j][i] != '0':
         #             num = expansion[j][i]
@@ -96,7 +99,7 @@ class GUI:
         #             num = ""
         #         self.Labels[i]["text"] = num
         #         self.Labels[i]["bg"] = self.colors[expansion[j][i]]
-        #     self.root.update()
+        # self.root.update()
 
 
 app = GUI()
