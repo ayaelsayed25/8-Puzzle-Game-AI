@@ -69,8 +69,6 @@ def construct_path(state, initial_state, start_time, parent_set):
         state = parent_set[state.value]
     path.append(state.value)
     path.reverse()
-    print(path)
-    print(len(path))
     return [True, timeOfExecution, path, costOfPath]
 
 
